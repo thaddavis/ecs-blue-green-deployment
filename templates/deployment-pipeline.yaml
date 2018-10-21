@@ -28,6 +28,9 @@ Parameters:
   VpcCIDR:
     Type: String
 
+  CertificateArn:
+    Type: String
+
 Resources:
 
   BlueGreenFlipLambda:
@@ -117,6 +120,7 @@ Resources:
                   - ec2:*
                   - elasticloadbalancing:*
                   - autoscaling:*
+                  - route53:*
 
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
@@ -384,8 +388,8 @@ Resources:
                       "Code2" : { "Fn::GetParam" : [ "DiscoveryOutput", "cf_inputs.json", "Code2" ] },
                       "Repository": "${Repository}",
                       "GitHubRepo": "${GitHubRepo}",
-                      "TemplateBucket": "${TemplateBucket}"
-
+                      "TemplateBucket": "${TemplateBucket}",
+                      "CertificateArn": "${CertificateArn}"
                   }
               InputArtifacts:
                 - Name: Template

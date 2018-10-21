@@ -40,6 +40,8 @@ Parameters:
     Description: >
       S3 Bucket used for nested templates
 
+  CertificateArn:
+    Type: String
 
 Mappings:
   AWSRegionToAMI:
@@ -191,13 +193,14 @@ Resources:
       Parameters:
         Cluster: !Ref Cluster
         LoadBalancer: !GetAtt LoadBalancer.Outputs.LoadBalancerArn
-        Port: 8080
+        Port: 8443
         Tag: !Ref Code2
         DesiredCount: "1"
         VpcId: !Ref VpcId
         Repository: !Ref Repository
         Identifier: "Code2"
         IsProduction: False
+        CertificateArn: !Ref CertificateArn
 
   BlueService:
     Type: AWS::CloudFormation::Stack
@@ -206,13 +209,15 @@ Resources:
       Parameters:
         Cluster: !Ref Cluster
         LoadBalancer: !GetAtt LoadBalancer.Outputs.LoadBalancerArn
-        Port: 80
+        Port: 443
         Tag: !Ref Code1
         DesiredCount: "1"
         VpcId: !Ref VpcId
         Repository: !Ref Repository
         Identifier: "Code1"
         IsProduction: True
+        CertificateArn: !Ref CertificateArn
+        
 
 
 Outputs:

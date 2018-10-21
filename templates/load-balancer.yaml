@@ -32,6 +32,14 @@ Resources:
           IpProtocol: "TCP"
           FromPort: 8080
           ToPort: 8080
+        - CidrIp: "0.0.0.0/0"
+          IpProtocol: "TCP"
+          FromPort: 443
+          ToPort: 443
+        - CidrIp: "0.0.0.0/0"
+          IpProtocol: "TCP"
+          FromPort: 8443
+          ToPort: 8443
       VpcId: !Ref VpcId
 
   LoadBalancer:
@@ -43,6 +51,19 @@ Resources:
         - !Ref Subnet2
       SecurityGroups:
         - !Ref SecurityGroup
+
+  myDNS:
+    Type: AWS::Route53::RecordSetGroup
+    DependsOn: LoadBalancer  
+    Properties:
+      HostedZoneName: 4171mia.com.
+      Comment: Zone apex alias targeted to myELB LoadBalancer.
+      RecordSets:
+      - Name: 4171mia.com.
+        Type: A
+        AliasTarget:
+          HostedZoneId: !GetAtt LoadBalancer.CanonicalHostedZoneID
+          DNSName: !GetAtt LoadBalancer.DNSName
         
 Outputs:
   ServiceUrl:

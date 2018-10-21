@@ -5,11 +5,12 @@ Description: >
 Parameters:
   GitHubUser:
     Type: String
+    Default: thaddavis
     Description: Your username on GitHub.
 
   GitHubRepo:
     Type: String
-    Default: ecs-demo-php-simple-app
+    Default: nodeV2
     Description: The repo name of the sample service.
     AllowedPattern: "[A-Za-z0-9_.-]*"
     MaxLength: 50
@@ -21,13 +22,21 @@ Parameters:
 
   GitHubToken:
     Type: String
+    Default: 1c4acdacdcaccec1f8a3ba294bf71c63ddc948eb
     Description: >
       Token for the user specified above. (https://github.com/settings/tokens)
 
   TemplateBucket:
     Type: String
+    Default: blue-green-node
     Description: >
       S3 Bucket used for nested templates
+
+  CertificateArn:
+    Type: String
+    Default: arn:aws:acm:us-east-1:666089720298:certificate/d952ef43-2eb7-4fc7-a357-6ad4b0e3aea0
+    Description: ARN of the Amazon Certificate Manager SSL certificate to use for this app
+
 
 
 Metadata:
@@ -66,6 +75,7 @@ Resources:
         Subnet2: !GetAtt VPC.Outputs.Subnet2
         VpcId: !GetAtt VPC.Outputs.VpcId
         VpcCIDR: 10.215.0.0/16
+        CertificateArn: !Ref CertificateArn
 
   VPC:
     Type: AWS::CloudFormation::Stack
